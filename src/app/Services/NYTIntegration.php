@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\DTO\NYTDtoParam;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
 class NYTIntegration
@@ -25,12 +26,18 @@ class NYTIntegration
             'offset' => $dtoParam->getOffset(),
         ]);
 
-        $response = Http::get($this->apiUrl, $queryParams);
+        $cacheKey = 'api_response_' . md5(json_encode($queryParams));
 
-        if ($response->failed()) {
-            return null;
-        }
+        $responseData = Cache::remember($cacheKey, now()->addDay(), function () use ($queryParams) {
+            $response = Http::get($this->apiUrl, $queryParams);
 
-        return $response->json();
+            if ($response->failed()) {
+                return null;
+            }
+
+            return $response->json();
+        });
+
+        return $responseData;
     }
 }
