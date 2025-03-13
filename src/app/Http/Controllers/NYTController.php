@@ -5,10 +5,11 @@ namespace App\Http\Controllers;
 use App\DTO\NYTDtoParam;
 use App\Http\Requests\NYTListRequest;
 use App\Services\NYTIntegration;
+use Illuminate\Http\JsonResponse;
 
 class NYTController extends Controller
 {
-    public function __invoke(NYTListRequest $request, NYTIntegration $NYTIntegration)
+    public function __invoke(NYTListRequest $request, NYTIntegration $NYTIntegration): JsonResponse
     {
         $dto = new NYTDtoParam(
             author: $request->input('author'),
