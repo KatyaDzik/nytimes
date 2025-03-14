@@ -16,8 +16,6 @@ class NYTIntegration
 
     public function fetchBestSellers(NYTDtoParam $dtoParam): ?array
     {
-        $queryParams['api-key'] = $this->apiKey;
-
         $queryParams = array_filter([
             'api-key' => $this->apiKey,
             'author' => $dtoParam->getAuthor(),
