@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\DTO\NYTDtoParam;
 use App\Http\Requests\NYTListRequest;
+use App\Http\Resources\BookCollection;
 use App\Services\NYTIntegration;
 use Illuminate\Http\JsonResponse;
 
@@ -21,7 +22,7 @@ class NYTController extends Controller
         $response = $NYTIntegration->fetchBestSellers($dto);
 
         return $response
-            ? response()->json($response)
+            ?  (new BookCollection($response))->response()
             : response()->json(['error' => 'Failed to fetch data from NYT API'], 503);
     }
 }
